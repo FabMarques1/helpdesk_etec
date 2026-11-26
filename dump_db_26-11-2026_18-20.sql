@@ -1,6 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `helpdesk_etec_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `helpdesk_etec_db`;
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
 --
 -- Host: localhost    Database: helpdesk_etec_db
 -- ------------------------------------------------------
@@ -28,7 +28,7 @@ CREATE TABLE `tbl_categoria` (
   `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `nome` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,6 +37,7 @@ CREATE TABLE `tbl_categoria` (
 
 LOCK TABLES `tbl_categoria` WRITE;
 /*!40000 ALTER TABLE `tbl_categoria` DISABLE KEYS */;
+INSERT INTO `tbl_categoria` VALUES (1,'Computadores');
 /*!40000 ALTER TABLE `tbl_categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,7 +61,7 @@ CREATE TABLE `tbl_emprestimos` (
   KEY `idx_data_prevista` (`data_prevista`),
   CONSTRAINT `fk_tbl_emprestimos_tbl_equipamentos1` FOREIGN KEY (`id_equipamento`) REFERENCES `tbl_equipamentos` (`id`),
   CONSTRAINT `fk_tbl_emprestimos_tbl_usuarios1` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuarios` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,15 +85,15 @@ CREATE TABLE `tbl_equipamentos` (
   `patrimonio` smallint unsigned NOT NULL,
   `descricao` varchar(255) NOT NULL,
   `id_categoria` smallint unsigned NOT NULL,
-  `id_estado` tinyint unsigned NOT NULL,
+  `id_estado` smallint unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `patrimonio_UNIQUE` (`patrimonio`),
-  KEY `fk_tbl_equipamentos_tbl_estado_equipamento1_idx` (`id_estado`),
   KEY `fk_tbl_equipamentos_tbl_categoria1_idx` (`id_categoria`),
   KEY `idx_descricao` (`descricao`),
+  KEY `fk_tbl_equipamentos_tbl_estado_equipamento1_idx` (`id_estado`),
   CONSTRAINT `fk_tbl_equipamentos_tbl_categoria1` FOREIGN KEY (`id_categoria`) REFERENCES `tbl_categoria` (`id`),
   CONSTRAINT `fk_tbl_equipamentos_tbl_estado_equipamento1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estado_equipamento` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -112,10 +113,10 @@ DROP TABLE IF EXISTS `tbl_estado_equipamento`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_estado_equipamento` (
-  `id` tinyint unsigned NOT NULL AUTO_INCREMENT,
+  `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `nome` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,6 +125,7 @@ CREATE TABLE `tbl_estado_equipamento` (
 
 LOCK TABLES `tbl_estado_equipamento` WRITE;
 /*!40000 ALTER TABLE `tbl_estado_equipamento` DISABLE KEYS */;
+INSERT INTO `tbl_estado_equipamento` VALUES (1,'Disponível'),(2,'Empréstimo'),(3,'Manutenção');
 /*!40000 ALTER TABLE `tbl_estado_equipamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,14 +166,15 @@ CREATE TABLE `tbl_usuarios` (
   `sobrenome` varchar(30) NOT NULL,
   `matricula` char(5) NOT NULL,
   `email` varchar(60) NOT NULL,
+  `senha` varchar(64) NOT NULL,
   `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status_bloqueio` tinyint NOT NULL DEFAULT '0',
-  `tipo_usuario` tinyint unsigned NOT NULL,
+  `tipo_usuario` tinyint unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `matricula_UNIQUE` (`matricula`),
   KEY `fk_tbl_usuarios_tbl_tipo_usuario_idx` (`tipo_usuario`),
   CONSTRAINT `fk_tbl_usuarios_tbl_tipo_usuario` FOREIGN KEY (`tipo_usuario`) REFERENCES `tbl_tipo_usuario` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,4 +195,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-26 18:21:07
+-- Dump completed on 2026-11-26 20:43:18
