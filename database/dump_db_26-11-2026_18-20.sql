@@ -1,6 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `helpdesk_etec_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `helpdesk_etec_db`;
--- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
 -- Host: localhost    Database: helpdesk_etec_db
 -- ------------------------------------------------------
@@ -61,7 +61,7 @@ CREATE TABLE `tbl_emprestimos` (
   KEY `idx_data_prevista` (`data_prevista`),
   CONSTRAINT `fk_tbl_emprestimos_tbl_equipamentos1` FOREIGN KEY (`id_equipamento`) REFERENCES `tbl_equipamentos` (`id`),
   CONSTRAINT `fk_tbl_emprestimos_tbl_usuarios1` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,8 +70,51 @@ CREATE TABLE `tbl_emprestimos` (
 
 LOCK TABLES `tbl_emprestimos` WRITE;
 /*!40000 ALTER TABLE `tbl_emprestimos` DISABLE KEYS */;
+INSERT INTO `tbl_emprestimos` VALUES (7,1,1,'2026-11-27 00:28:28','2026-11-30','2026-12-30');
 /*!40000 ALTER TABLE `tbl_emprestimos` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_emprestimo_after_insert_1` AFTER INSERT ON `tbl_emprestimos` FOR EACH ROW BEGIN
+	UPDATE tbl_equipamentos
+    SET id_estado = 2
+    WHERE id = NEW.id_equipamento;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_emprestimo_after_update_1` AFTER UPDATE ON `tbl_emprestimos` FOR EACH ROW BEGIN
+	IF (OLD.data_devolucao IS NULL)
+		AND (NEW.data_devolucao IS NOT NULL) THEN
+			UPDATE tbl_equipamentos
+            SET id_estado = 1
+            WHERE id = NEW.id_equipamento;
+	END IF;
+		
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `tbl_equipamentos`
@@ -93,7 +136,7 @@ CREATE TABLE `tbl_equipamentos` (
   KEY `fk_tbl_equipamentos_tbl_estado_equipamento1_idx` (`id_estado`),
   CONSTRAINT `fk_tbl_equipamentos_tbl_categoria1` FOREIGN KEY (`id_categoria`) REFERENCES `tbl_categoria` (`id`),
   CONSTRAINT `fk_tbl_equipamentos_tbl_estado_equipamento1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estado_equipamento` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,6 +145,7 @@ CREATE TABLE `tbl_equipamentos` (
 
 LOCK TABLES `tbl_equipamentos` WRITE;
 /*!40000 ALTER TABLE `tbl_equipamentos` DISABLE KEYS */;
+INSERT INTO `tbl_equipamentos` VALUES (1,12345,'TESTE DE EQUIPAMENTO',1,1);
 /*!40000 ALTER TABLE `tbl_equipamentos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -183,8 +227,45 @@ CREATE TABLE `tbl_usuarios` (
 
 LOCK TABLES `tbl_usuarios` WRITE;
 /*!40000 ALTER TABLE `tbl_usuarios` DISABLE KEYS */;
+INSERT INTO `tbl_usuarios` VALUES (1,'a','a','a','a','a','2026-11-27 00:07:58',0,1);
 /*!40000 ALTER TABLE `tbl_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'helpdesk_etec_db'
+--
+
+--
+-- Dumping routines for database 'helpdesk_etec_db'
+--
+/*!50003 DROP FUNCTION IF EXISTS `fn_calcular_dias_atraso` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_calcular_dias_atraso`(p_data_prevista DATE, p_data_devolucao DATE) RETURNS smallint
+    DETERMINISTIC
+BEGIN
+	DECLARE dias_atraso SMALLINT;
+
+	IF (p_data_prevista IS NULL OR p_data_devolucao IS NULL) THEN
+		SET dias_atraso = 0;
+	ELSE
+		SET dias_atraso = DATEDIFF(p_data_devolucao, p_data_prevista);
+	END IF;
+
+RETURN dias_atraso;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -195,4 +276,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-26 20:43:18
+-- Dump completed on 2026-11-26 22:17:42
